@@ -28,8 +28,7 @@ end_per_suite(Config) ->
 
 init_per_testcase(_TestCase, Config) ->
   SlaveNode = proplists:get_value(slave_node, Config),
-  ok = rpc:call(SlaveNode, meck, new, [mylib, [no_link, passthrough]]),
-  rpc:call(SlaveNode, meck, expect, [mylib, foo, [{0, bar2}]]),
+  ok = rpc:call(SlaveNode, meck, new, [mylib, [no_link, passthrough]]), %% (1)
   Config.
 
 end_per_testcase(_TestCase, _Config) ->
@@ -42,7 +41,7 @@ end_per_testcase(_TestCase, _Config) ->
 
 happy_case(Config) ->
   SlaveNode = proplists:get_value(slave_node, Config),
-  bar2 = rpc:call(SlaveNode, mylib, foo, []),
   bar = rpc:call(node(), mylib, foo, []),
+  bar2 = rpc:call(SlaveNode, mylib, foo2, []),
   ok.
 
